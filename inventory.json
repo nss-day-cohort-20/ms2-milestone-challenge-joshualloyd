@@ -1,0 +1,25 @@
+{
+  "cars": [
+    {
+      "make": "Nissan",
+      "model": "Rogue",
+      "year": "2006",
+      "price": "8999",
+      "description": "This is an immaculate 2006 Nissan Rogue with only 25000 miles on it. Leather seats, power everything."
+    },
+    {
+    	"make": "Honda",
+      "model": "CRV",
+      "year": "2008",
+      "price": "10999",
+      "description": "This is an amazing 2008 Honda CRV with only a mere 18000 miles on it. Lot of features, great ride."
+    },
+    {
+    	"make": "Toyota",
+      "model": "Rav4",
+      "year": "2005",
+      "price": "6999",
+      "description": "This is a great 2005 Toyota Rav4 with 83000 miles on it. Good price, runs great."
+    }
+  ]
+}
