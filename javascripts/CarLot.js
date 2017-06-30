@@ -7,22 +7,30 @@ var CarLot = (function (globalScopeCarLot) {
 
   // Start building the Object that will be attached
   // to the CarLot.Inventory namespace
-  let inventory = Object.create(null, {
-    loadInventory: function (callback) {
-      var load = new XMLHttpRequest();
+  let inventory = Object.create(null);
 
-      inventoryLoader.addEventListener("load", function () {
-        // Add each car to the private _car_inventory array
-        var data = JSON.parse(event.target.responseText);
-        callback(data);
+  inventory.loadInventory = function() {
+    var load = new XMLHttpRequest();
+
+    load.addEventListener("load", function() {
+      // Add each car to the private _car_inventory array
+      var data = JSON.parse(event.target.responseText).cars;
+      console.log(data);
+      data.forEach(function(car){
+        inventory.addCar(car);
       });
-      load.open("GET", "inventory.json");
-      load.send();
-    },
-    getCarInventory: function() {
-      return _car_inventory;
-    }
-  });
+    });
+    load.open("GET", "inventory.json");
+    load.send();
+  }
+
+  inventory.addCar = function(input) {
+    _car_inventory.push(input);
+  }
+
+  inventory.getCarInventory = function() {
+    return _car_inventory;
+  }
 
   globalScopeCarLot.Inventory = inventory;
   return globalScopeCarLot;
