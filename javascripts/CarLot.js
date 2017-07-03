@@ -4,32 +4,89 @@ var CarLot = (function (globalScopeCarLot) {
 
   // Define a private scope variable to store cars
   let _car_inventory = [];
+  let stringForCarLotDiv = '';
 
   // Start building the Object that will be attached
   // to the CarLot.Inventory namespace
+  let carLotDiv = document.getElementById('car-lot');
+
   let inventory = Object.create(null);
 
   inventory.loadInventory = function() {
-    var load = new XMLHttpRequest();
+    let load = new XMLHttpRequest();
 
     load.addEventListener("load", function() {
-      // Add each car to the private _car_inventory array
-      var data = JSON.parse(event.target.responseText).cars;
-      console.log(data);
+      let data = JSON.parse(event.target.responseText).cars;
       data.forEach(function(car){
         inventory.addCar(car);
       });
+      inventory.buildCarLotString();
+      inventory.insertCarLotStringIntoDom();
     });
     load.open("GET", "inventory.json");
     load.send();
   }
 
-  inventory.addCar = function(input) {
-    _car_inventory.push(input);
+  inventory.addCarToInventory = function(carObject) {
+    _car_inventory.push(carObject);
+  }
+
+  inventory.addCar = function(carObject) {
+    inventory.addCarToInventory(carObject);
+  }
+
+  inventory.insertCarLotStringIntoDom = function() {
+    carLotDiv.innerHTML = stringForCarLotDiv;
+  }
+
+  inventory.buildCarLotString = function() {
+    let counter = 1;
+
+    let cars = inventory.getCarInventory();
+
+    cars.forEach(function(carObject){
+      let carTemplate =
+      `
+        <div class="car col-sm-4" id="car${counter}">
+          <h3>${carObject.year} ${carObject.make} ${carObject.model}</h3>
+          <h4>$${carObject.price}</h4>
+          <p>${carObject.description}</p>
+        </div>
+      `;
+
+      if (counter === 1) {
+        //first car needs to add open row div
+        stringForCarLotDiv += `<div class="row">`;
+        stringForCarLotDiv += carTemplate;
+        counter++;
+      } else if (counter % 3 === 0) {
+        // every third row needs to close and open row div
+        stringForCarLotDiv += carTemplate;
+        stringForCarLotDiv += `</div>`;
+        stringForCarLotDiv += `<div class="row">`;
+        counter++
+      } else if (counter === _car_inventory.length) {
+        // final car should add final closing row div
+        stringForCarLotDiv += carTemplate;
+        stringForCarLotDiv += `</div>`;
+      } else {
+        // all other rows just add the car
+        stringForCarLotDiv += carTemplate;
+        counter++;
+      }
+    });
   }
 
   inventory.getCarInventory = function() {
     return _car_inventory;
+  }
+
+  inventory.clearSelectedClass = function() {
+    let carCards = document.querySelectorAll('.car');
+    carCards.forEach(function(carCard) {
+      carCard.classList.remove('selected');
+    });
+
   }
 
   globalScopeCarLot.Inventory = inventory;
