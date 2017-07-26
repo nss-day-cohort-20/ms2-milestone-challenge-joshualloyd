@@ -89,6 +89,16 @@ var CarLot = (function (globalScopeCarLot) {
 
   }
 
+  inventory.cardSelect = function(targetCard, textInput) {
+    let carCards = document.querySelectorAll('.car');
+    carCards.forEach(function(carCard) {
+      carCard.classList.remove('selected');
+    });
+    targetCard.classList.toggle('selected');
+    textInput.value = '';
+    textInput.focus();
+  }
+
   globalScopeCarLot.Inventory = inventory;
   return globalScopeCarLot;
 
